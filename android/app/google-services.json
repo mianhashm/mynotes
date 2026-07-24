@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "400468902410",
+    "project_id": "mynotes-ec52c",
+    "storage_bucket": "mynotes-ec52c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:400468902410:android:16c43f7cc1652cb55795f3",
+        "android_client_info": {
+          "package_name": "com.example.course"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBopDHjwVbvZSGcbnXrFlFtKHQdFfzq6mg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
