@@ -1,5 +1,6 @@
 import 'package:course/firebase_options.dart';
 import 'package:course/views/login-view.dart';
+import 'package:course/views/register-view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,10 @@ void main() {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: HomePage(),
+      routes: {
+        '/login': (context) => const LoginView(),
+        '/register': (context) => const RegisterView(),
+      },
     ),
   );
 }

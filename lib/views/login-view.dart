@@ -1,6 +1,5 @@
-import 'package:course/firebase_options.dart';
+import 'package:course/views/register-view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
@@ -33,48 +32,59 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          //email
-          TextField(
-            controller: _email,
-            autocorrect: false,
-            enableSuggestions: false,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(hintText: 'Enter Your Email'),
-          ),
-          //Password
-          TextField(
-            controller: _password,
-            obscureText: true,
-            autocorrect: false,
-            enableSuggestions: false,
-            decoration: InputDecoration(hintText: 'Enter Your Password'),
-          ),
-          //Register Button
-          TextButton(
-            onPressed: () async {
-              final email = _email.text;
-              final password = _password.text;
-              try {
-                final userCredential = await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                      email: email,
-                      password: password,
-                    );
-                print(userCredential);
-              } on FirebaseAuthException catch (e) {
-                print(e.runtimeType);
-                print(e.code);
-                if (e.code == 'invalid-credential') {
-                  print('Invalid Credential');
+    return Scaffold(
+      appBar: AppBar(title: const Text("Login")),
+      body: Container(
+        child: Column(
+          children: [
+            //email
+            TextField(
+              controller: _email,
+              autocorrect: false,
+              enableSuggestions: false,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(hintText: 'Enter Your Email'),
+            ),
+            //Password
+            TextField(
+              controller: _password,
+              obscureText: true,
+              autocorrect: false,
+              enableSuggestions: false,
+              decoration: InputDecoration(hintText: 'Enter Your Password'),
+            ),
+            //Register Button
+            TextButton(
+              onPressed: () async {
+                final email = _email.text;
+                final password = _password.text;
+                try {
+                  final userCredential = await FirebaseAuth.instance
+                      .signInWithEmailAndPassword(
+                        email: email,
+                        password: password,
+                      );
+                  print(userCredential);
+                } on FirebaseAuthException catch (e) {
+                  print(e.runtimeType);
+                  print(e.code);
+                  if (e.code == 'invalid-credential') {
+                    print('Invalid Credential');
+                  }
                 }
-              }
-            },
-            child: const Text("login"),
-          ),
-        ],
+              },
+              child: const Text("login"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(
+                  context,
+                ).pushNamedAndRemoveUntil('/register', (route) => false);
+              },
+              child: const Text("Not registered? Register here!"),
+            ),
+          ],
+        ),
       ),
     );
   }
