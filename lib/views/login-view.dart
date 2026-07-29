@@ -1,3 +1,4 @@
+import 'package:course/constants/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
@@ -74,7 +75,7 @@ class _LoginViewState extends State<LoginView> {
                 }
                 Navigator.of(
                   context,
-                ).pushNamedAndRemoveUntil('/notes', (route) => false);
+                ).pushNamedAndRemoveUntil(notesRoute, (route) => false);
               },
               child: const Text("login"),
             ),
@@ -82,7 +83,7 @@ class _LoginViewState extends State<LoginView> {
               onPressed: () {
                 Navigator.of(
                   context,
-                ).pushNamedAndRemoveUntil('/register', (route) => false);
+                ).pushNamedAndRemoveUntil(registerRoute, (route) => false);
               },
               child: const Text("Not registered? Register here!"),
             ),
