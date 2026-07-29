@@ -1,5 +1,3 @@
-import 'dart:developer' as devtools show log;
-
 import 'package:course/firebase_options.dart';
 import 'package:course/views/login-view.dart';
 import 'package:course/views/register-view.dart';
@@ -20,6 +18,7 @@ void main() {
       home: HomePage(),
       routes: {
         '/home': (context) => const HomePage(),
+        '/notes': (context) => const NotesView(),
         '/login': (context) => const LoginView(),
         '/register': (context) => const RegisterView(),
       },
