@@ -60,12 +60,19 @@ class _LoginViewState extends State<LoginView> {
                       email: email,
                       password: password,
                     );
-
+                final user = FirebaseAuth.instance.currentUser;
+                if (user?.emailVerified ?? false) {
+                  //if user is verified
+                  Navigator.of(
+                    context,
+                  ).pushNamedAndRemoveUntil(notesRoute, (route) => false);
+                } else {
+                  //if user is not verified
+                  Navigator.of(
+                    context,
+                  ).pushNamedAndRemoveUntil(verifyEmailRoute, (route) => false);
+                }
                 devtools.log(userCredential.toString());
-
-                Navigator.of(
-                  context,
-                ).pushNamedAndRemoveUntil(notesRoute, (route) => false);
               } on FirebaseAuthException catch (e) {
                 devtools.log(e.code);
                 devtools.log(e.message ?? "No message");
