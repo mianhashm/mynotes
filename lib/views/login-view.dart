@@ -1,6 +1,7 @@
 import 'package:course/constants/routes.dart';
+import 'package:course/services/auth/auth-exceptions.dart';
+import 'package:course/services/auth/auth-service.dart';
 import 'package:course/util/show-error-dialogue.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
 
@@ -55,13 +56,12 @@ class _LoginViewState extends State<LoginView> {
               final password = _password.text;
 
               try {
-                final userCredential = await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                      email: email,
-                      password: password,
-                    );
-                final user = FirebaseAuth.instance.currentUser;
-                if (user?.emailVerified ?? false) {
+                final userCredential = await AuthService.firebase().logIn(
+                  email: email,
+                  password: password,
+                );
+                final user = AuthService.firebase().currentUser;
+                if (user?.isEmailVerified ?? false) {
                   //if user is verified
                   Navigator.of(
                     context,
@@ -73,44 +73,26 @@ class _LoginViewState extends State<LoginView> {
                   ).pushNamedAndRemoveUntil(verifyEmailRoute, (route) => false);
                 }
                 devtools.log(userCredential.toString());
-              } on FirebaseAuthException catch (e) {
-                devtools.log(e.code);
-                devtools.log(e.message ?? "No message");
-
-                switch (e.code) {
-                  case 'invalid-credential':
-                    await showErrorDialogue(
-                      context,
-                      "Incorrect email or password.",
-                    );
-                    break;
-
-                  case 'invalid-email':
-                    await showErrorDialogue(context, "Invalid email.");
-                    break;
-
-                  case 'user-disabled':
-                    await showErrorDialogue(
-                      context,
-                      "This account has been disabled.",
-                    );
-                    break;
-
-                  case 'too-many-requests':
-                    await showErrorDialogue(
-                      context,
-                      "Too many login attempts.",
-                    );
-                    break;
-
-                  case 'network-request-failed':
-                    await showErrorDialogue(context, "No internet connection.");
-                    break;
-
-                  default:
-                    await showErrorDialogue(context, "Error: ${e.code}");
-                    break;
-                }
+              } on userNotFoundAuthException {
+                await showErrorDialogue(
+                  context,
+                  "User not found. Please check your email and try again.",
+                );
+              } on wrongPasswordAuthException {
+                await showErrorDialogue(
+                  context,
+                  "Incorrect password. Please try again.",
+                );
+              } on invalidEmailAuthException {
+                await showErrorDialogue(
+                  context,
+                  "Invalid email format. Please check your email and try again.",
+                );
+              } on genericAuthException {
+                await showErrorDialogue(
+                  context,
+                  "An error occurred during login. Please try again later.",
+                );
               }
             },
             child: const Text("Login"),

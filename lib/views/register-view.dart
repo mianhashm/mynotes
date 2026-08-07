@@ -1,6 +1,7 @@
 import 'package:course/constants/routes.dart';
+import 'package:course/services/auth/auth-exceptions.dart';
+import 'package:course/services/auth/auth-service.dart';
 import 'package:course/util/show-error-dialogue.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RegisterView extends StatefulWidget {
@@ -60,23 +61,20 @@ class _RegisterViewState extends State<RegisterView> {
                 final email = _email.text;
                 final password = _password.text;
                 try {
-                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  await AuthService.firebase().createUser(
                     email: email,
                     password: password,
                   );
-                  final user = FirebaseAuth.instance.currentUser;
-                  await user?.sendEmailVerification();
+                  await AuthService.firebase().sendEmailVerification();
                   Navigator.of(context).pushNamed(verifyEmailRoute);
-                } on FirebaseAuthException catch (e) {
-                  if (e.code == 'weak-password') {
-                    await showErrorDialogue(context, "Password is too weak");
-                  } else if (e.code == 'email-already-in-use') {
-                    await showErrorDialogue(context, "Email is already in use");
-                  } else {
-                    await showErrorDialogue(context, e.toString());
-                  }
-                } catch (e) {
-                  await showErrorDialogue(context, e.toString());
+                } on weakPasswordAuthException {
+                  await showErrorDialogue(context, "Password is too weak");
+                } on emailAlreadyInUseAuthException {
+                  await showErrorDialogue(context, "Email is already in use");
+                } on invalidEmailAuthException {
+                  await showErrorDialogue(context, "Invalid email");
+                } on genericAuthException {
+                  await showErrorDialogue(context, "Something went wrong");
                 }
               },
               child: const Text("register"),
