@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:course/constants/routes.dart';
 import 'package:course/enums/menu-actions.dart';
 import 'package:course/services/auth/auth-service.dart';
+import 'package:course/services/crud/notes-service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -12,6 +14,22 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
+  late final NotesService _notesService;
+  String get userEmail => AuthService.firebase().currentUser!.email!;
+
+  @override
+  void initState() {
+    _notesService = NotesService();
+    _notesService.open();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _notesService.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +56,17 @@ class _NotesViewState extends State<NotesView> {
             },
           ),
         ],
+      ),
+      body: FutureBuilder(
+        future: _notesService.getOrCreateUser(email: userEmail),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              return const Text("your notes will appear here now");
+            default:
+              return const CircularProgressIndicator();
+          }
+        },
       ),
     );
   }
