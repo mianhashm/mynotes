@@ -12,6 +12,10 @@ class NotesService {
   final _notesStreamController =
       StreamController<List<DatabaseNote>>.broadcast();
 
+  static final NotesService _shared = NotesService._sharedInstance();
+  NotesService._sharedInstance();
+  factory NotesService() => _shared;
+
   Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
 
   Future<DatabaseUser> getOrCreateUser({required String email}) async {
