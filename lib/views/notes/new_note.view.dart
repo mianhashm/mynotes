@@ -36,6 +36,7 @@ class _NewNoteViewState extends State<NewNoteView> {
   }
 
   Future<DatabaseNote> createNewNote() async {
+    print("creating new note");
     final existingNote = _note;
     if (existingNote != null) {
       return existingNote;
